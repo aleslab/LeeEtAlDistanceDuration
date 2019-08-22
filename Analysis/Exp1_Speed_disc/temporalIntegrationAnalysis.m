@@ -9,10 +9,10 @@ ptbCorgiData = uiGetPtbCorgiData();
 %Jointly fitting a lapse rate to both conditions
 %Just allowing the slope/variance of the underlying normal to change
 %between contrast groups.
-analysis.function = @psychometricFitMultipleVSS2019; %@psychometricFitTemporalMultiple 
+analysis.function = @psychometricFitTemporal; 
 %if accounting for lapse rate; @psychometricFitTemporal if not
 %Choose how to group conditions
-analysis.funcOptions.groupingField = 'temporalGap'; %temporalGap for exp 4,6 and 8, 'spatialGap' for exp 5
+analysis.funcOptions.groupingField = 'temporalGap'; %temporalGap for speed discrimination experiment (exp1)
 %choose what to put on the x-axis.
 analysis.funcOptions.xAxisField = 'velocityDegPerSecSection2';
 [analysis, ptbCorgiData] = ptbCorgiAnalyzeEachParticipant(analysis,ptbCorgiData);

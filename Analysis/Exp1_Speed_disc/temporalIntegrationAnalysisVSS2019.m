@@ -1,10 +1,12 @@
+%THIS ONLY LOADS ON THE LAB COMPUTER - NEEDS FIXING
 
-%load data
-%ptbCorgiData = uiGetPtbCorgiData();
-% loadGroupedData;
-% ptbCorgiData{1} = ptbCorgiDataShort;
-% ptbCorgiData{2} = ptbCorgiDataMid;
-% ptbCorgiData{3} = ptbCorgiDataLong;
+load data
+ptbCorgiData = uiGetPtbCorgiData();
+loadGroupedData;
+ptbCorgiData{1} = ptbCorgiDataShort;
+ptbCorgiData{2} = ptbCorgiDataMid;
+ptbCorgiData{3} = ptbCorgiDataLong;
+
 
 nP = ptbCorgiDataShort.nParticipants
 nGroup = 3;

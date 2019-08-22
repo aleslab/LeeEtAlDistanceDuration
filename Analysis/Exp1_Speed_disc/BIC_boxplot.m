@@ -1,4 +1,5 @@
 %BIC model comparisons - negative numbers mean evidence for speed only
+%values are HARD CODED - extracted from 
 
 % alpha (weber) change = duration
 %beta (PSE) change = distance

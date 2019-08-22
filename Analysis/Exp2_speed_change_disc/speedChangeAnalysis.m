@@ -1,8 +1,13 @@
+%Psychometric analysis file for speed change discrimination experiment
+%(Experiment 2 of "Visual perception of motion: Exploring how distance and
+%duration information contributes to speed and speed change
+%discrimination")
+
 clearvars;
-cd /Users/aril/Documents/Experiment_7 %macbook
+cd /Users/aril/Documents/Experiment_7 %
 
 
-participantCodes = {'AL'};
+participantCodes = {'AW' 'AX' 'AZ' 'BA' 'BB' 'BD' 'BF'}; %participant codes
 ParOrNonPar = 2; %non-parametric bootstrap for all
 BootNo = 1000; %number of simulations for all bootstraps and goodness of fits
 
@@ -14,7 +19,7 @@ for iParticipant = 1:length(participantCodes)
         'lateralLine_speedchange_fixed_distance'; 'lateralLine_speedchange_balanced_max_match'; ...
         'lateralLine_speedchange_balanced_base_match'};
     
-    analysisType = {'speed_change'; 'proportionb_a_a'; 'proportionb_a_b'};
+    analysisType = {'proportionb_a_b'};
     
     for iAnalysis = 1:length(analysisType)
         currAnalysisType = cell2mat(analysisType(iAnalysis));
@@ -61,39 +66,11 @@ for iParticipant = 1:length(participantCodes)
             %allCorrectPercentages = (condCorrectNumbers./allTrialNumbers); %creates a double of the percentage correct responses for every condition
             
             
-            if strcmp(currAnalysisType, 'speed_change')
-                
-                xLabelTitle = 'Speed change (deg/s)';
-                
-                speedDiff = [0 2 4 6 8 10 12]; %difference in speed between section 1 and 2
-            elseif strcmp(currAnalysisType, 'proportionb_a_a')
-                
-                xLabelTitle = 'Proportion speed change ((b-a)/a)';
-                
-                if strfind(currCondition, 'lateralLine_speedchange_balanced_base_match')
-                    
-                    speedDiff = [0 0.2222 0.5 0.8571 1.3333 2 3];
-                    
-                elseif strfind(currCondition, 'lateralLine_speedchange_balanced_max_match')
-                    
-                    speedDiff = [0 0.1333 0.2857 0.4615 0.6667 0.9091 1.2];
-                    
-                elseif strfind(currCondition, 'lateralLine_speedchange_fixed_duration')
-                    
-                     speedDiff = [0 0.2 0.4 0.6 0.8 1 1.2];
-                    
-                elseif strfind(currCondition, 'lateralLine_speedchange_fixed_distance')
-                    
-                    speedDiff = [0 0.2 0.4 0.6 0.8 1 1.2];
-                    
-                end
-                
-                
-            elseif strcmp(currAnalysisType, 'proportionb_a_b')
+            if strcmp(currAnalysisType, 'proportionb_a_b')
                 
                 xLabelTitle = 'Proportion speed change ((b-a)/b)';
                 
-                 if strfind(currCondition, 'lateralLine_speedchange_balanced_base_match')
+                if strfind(currCondition, 'lateralLine_speedchange_balanced_base_match')
                     
                     speedDiff = [0 0.1818 0.3333 0.4615 0.5714 0.6667 0.75];
                     
@@ -105,10 +82,10 @@ for iParticipant = 1:length(participantCodes)
                     
                     speedDiff = [0 0.1667 0.2857 0.375 0.4444 0.5 0.5455];
                     
-                 elseif strfind(currCondition, 'lateralLine_speedchange_fixed_distance')
-                     
-                    speedDiff = [0 0.1667 0.2857 0.375 0.4444 0.5 0.5455]; 
-                     
+                elseif strfind(currCondition, 'lateralLine_speedchange_fixed_distance')
+                    
+                    speedDiff = [0 0.1667 0.2857 0.375 0.4444 0.5 0.5455];
+                    
                 end
                 
             end
