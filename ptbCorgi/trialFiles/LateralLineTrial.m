@@ -1,8 +1,8 @@
 function [trialData] = LateralLineTrial(expInfo, conditionInfo)
 
 %trial code for AL's lateral moving line experiments - not accelerating or
-%motion in depth, lateral lines moving at constant retinal speed for
-%temporal integration experiments.
+%motion in depth - lateral lines moving at constant retinal speed for
+%experiments involving 2D motion.
 
 %% Setup
 
@@ -41,6 +41,8 @@ frameIdx = 1;
 
 %% Creating the line and the structure of the stimulus presentation
 
+%this is used for our spatial combination experiment, but not for the
+%experiments described in the paper here. 
 if isfield(conditionInfo,'shortLines') && conditionInfo.shortLines
     
     shortLines = true;
@@ -86,29 +88,35 @@ currIfi = expInfo.ifi;
 previousFlipTime = LAT;
 velocityPixPerSec = 0;
 
-while currentTime < section2endtime
+%determining what the line stimulus should be doing based on the time
+%during the stimulus presentation 
+
+while currentTime < section2endtime %while the current time is less than the total duration of the interval
     
-    if currentTime < preStimEndTime
+    if currentTime < preStimEndTime %if we're still in the pre-stimulus interval
         velocityPixPerSec = 0;
         drawLine = true;
         s2offsetDrawLine = false;
         
-    elseif currentTime > preStimEndTime && currentTime < section1endtime
+    elseif currentTime > preStimEndTime && currentTime < section1endtime %if we're in section 1 (speed 1)
         velocityPixPerSec = velSection1PixPerSec;
         drawLine = true;
         s2offsetDrawLine = false;
         
-    elseif currentTime > section1endtime && currentTime < gapendtime
+    elseif currentTime > section1endtime && currentTime < gapendtime %if we're in a time gap
         velocityPixPerSec = gapVelocityPixPerSec;
         drawLine = false;
         s2offsetDrawLine = false;
         
-    elseif currentTime > gapendtime && currentTime < section2endtime && ~shortLines
+    elseif currentTime > gapendtime && currentTime < section2endtime && ~shortLines %if we're in section 2 (speed 2) 
+        %and we are using the line stimulus that spans the full length of the screen
         velocityPixPerSec = velSection2PixPerSec;
         drawLine = true;
         s2offsetDrawLine = false;
         
-    elseif currentTime > gapendtime && currentTime < section2endtime && shortLines
+    elseif currentTime > gapendtime && currentTime < section2endtime && shortLines % if we're in section 2
+        % and are using the shorter lines for the speed combination
+        % experiment with a spatial offset
         velocityPixPerSec = velSection2PixPerSec;
         drawLine = false;
         s2offsetDrawLine = true;
@@ -121,6 +129,7 @@ while currentTime < section2endtime
     
     currLinePos = currLinePos + velocityPixPerSec * currIfi; %currLinePos is in pixels per frame
     
+    %only used for spatial combination of speed information experiment - not in this paper.
     if s2offsetDrawLine == true
         
         Screen('DrawLines', expInfo.curWindow, [currLinePos, currLinePos; lineYS2StartPos, lineYS2EndPos], lw);
@@ -135,7 +144,7 @@ while currentTime < section2endtime
     end
     
     
-    
+    %drawing fixation, flips and timings
     drawFixation(expInfo, expInfo.fixationInfo);
     currentFlipTime = Screen('Flip', expInfo.curWindow,nextFlipTime);
     trialData.LinePos(frameIdx) = currLinePos;
@@ -147,18 +156,6 @@ while currentTime < section2endtime
     previousFlipTime = currentFlipTime;
     
 end
-% 
-% %After the line moves we'll turn off the line and turn on a response
-% %indicator
-% %
-% 
-% responseIndicator.type = 'square';
-% responseIndicator.size = .4;
-% 
-% drawFixation(expInfo, expInfo.fixationInfo);
-% % drawFixation(expInfo, responseIndicator);
-% 
-% currentFlipTime = Screen('Flip', expInfo.curWindow);
 
 
 end
