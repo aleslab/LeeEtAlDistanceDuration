@@ -4,7 +4,8 @@
 %discrimination")
 
 clearvars;
-cd /Users/aril/Documents/Experiment_7 %
+dataDir = uigetdir();
+cd(dataDir)
 
 
 participantCodes = {'AW' 'AX' 'AZ' 'BA' 'BB' 'BD' 'BF'}; %participant codes
@@ -27,7 +28,7 @@ for iParticipant = 1:length(participantCodes)
             currCondition = cell2mat(conditionList(iCond));
             condAndParticipant = strcat(currCondition, '_', currParticipantCode);
             
-            fileDir = strcat('/Users/aril/Documents/Experiment_7/', condAndParticipant, '_*');
+            fileDir = strcat(dataDir,'/', condAndParticipant, '_*');
             
             filenames = dir(fileDir);
             filenames = {filenames.name}; %makes a cell of filenames from the same
