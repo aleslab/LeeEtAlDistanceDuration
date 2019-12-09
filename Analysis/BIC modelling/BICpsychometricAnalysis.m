@@ -218,6 +218,56 @@ OutOfNum = vertcat(shortOutOfNum, midOutOfNum, longOutOfNum);
     results1T1S(iParticipant).n = n;
     results1T1S(iParticipant).BIC       = log(n)*results.numParams - 2*results.LL;
     
+    figure;plot(StimLevels',(NumPos./OutOfNum)'); hold on; title(num2str(iParticipant));
+    x = linspace(6,15,100);
+    for i=1:3,
+    y = PAL_CumulativeNormal(results.paramsValues(i,:),x);
+    plot(x,y,'linewidth',2)
+    end
+    
+     %Define fuller model
+    thresholdsfuller = 'constrained';  %Each condition gets own threshold
+    slopesfuller = 'constrained';      %Each condition gets own slope
+    guessratesfuller = 'unconstrained';          %Guess rate fixed
+    lapseratesfuller= 'unconstrained';
+    [results.paramsValues, results.LL, results.exitflag, results.output funcParams results.numParams] = ...
+        PAL_PFML_FitMultiple(StimLevels, NumPos, OutOfNum, ...
+        paramsValues, PF,'searchOptions',options,'lapserates',lapseratesfuller,'guessLimits',[0 1],'thresholds',thresholdsfuller,...
+        'slopes',slopesfuller,'guessrates',guessratesfuller,'lapseLimits',[0 1],'lapseFit',lapseFit,'gammaeqlambda',false,'searchOptions',options);
+    
+    
+    resultsDur(iParticipant).LL = results.LL;
+    resultsDur(iParticipant).numParams = results.numParams;
+    n  =  sum(OutOfNum(:));
+    resultsDur(iParticipant).n = n;
+    resultsDur(iParticipant).BIC       = log(n)*results.numParams - 2*results.LL;
+    
+         %Define fuller model
+    thresholdsfuller = 'unconstrained';  %Each condition gets own threshold
+    slopesfuller = 'constrained';      %Each condition gets own slope
+    guessratesfuller = 'unconstrained';          %Guess rate fixed
+    lapseratesfuller= 'unconstrained';
+    [results.paramsValues, results.LL, results.exitflag, results.output funcParams results.numParams] = ...
+        PAL_PFML_FitMultiple(StimLevels, NumPos, OutOfNum, ...
+        paramsValues, PF,'searchOptions',options,'lapserates',lapseratesfuller,'guessLimits',[0 1], 'thresholds',thresholdsfuller,...
+        'slopes',slopesfuller,'guessrates',guessratesfuller,'lapseLimits',[0 1],'lapseFit',lapseFit,'gammaeqlambda',false,'searchOptions',options);
+    
+    
+    resultsDurDistSpeed(iParticipant).LL = results.LL;
+    resultsDurDistSpeed(iParticipant).numParams = results.numParams;
+    n  =  sum(OutOfNum(:));
+    resultsDurDistSpeed(iParticipant).n = n;
+    resultsDurDistSpeed(iParticipant).BIC       = log(n)*results.numParams - 2*results.LL;
+    resultsDurDistSpeed(iParticipant).paramsValues       = results.paramsValues;
+    
+
+    x = linspace(6,15,100);
+    for i=1:3,
+    y = PAL_CumulativeNormal(results.paramsValues(i,:),x)
+    plot(x,y)
+    end
+%     
+    
 end
 
 
