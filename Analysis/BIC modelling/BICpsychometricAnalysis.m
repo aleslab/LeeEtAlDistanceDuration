@@ -8,10 +8,16 @@ for iParticipant = 1:length(participants)
     
     currParticipantCode = cell2mat(participants(iParticipant));
     
+  
     %load short duration data
     shortfileDir = fullfile(dataDir, ['lateralLine_shortDuration_', currParticipantCode, '_*']);
     
     shortfilenames = dir(shortfileDir);
+    
+    if isempty(shortfilenames)
+        error(['Cannot find files ' shortfileDir ])
+    end
+    
     shortfilenames = {shortfilenames.name}; %makes a cell of filenames from the same
     %participant and condition to be loaded together
     
@@ -218,12 +224,32 @@ OutOfNum = vertcat(shortOutOfNum, midOutOfNum, longOutOfNum);
     results1T1S(iParticipant).n = n;
     results1T1S(iParticipant).BIC       = log(n)*results.numParams - 2*results.LL;
     
-    figure;plot(StimLevels',(NumPos./OutOfNum)'); hold on; title(num2str(iParticipant));
+    %Add a bit of x offset to make things visible
+   
     x = linspace(6,15,100);
+    figure;hold on;
+          y = PAL_CumulativeNormal(results.paramsValues(i,:),x);
+        plot(x,y,'k--','linewidth',2)
     for i=1:3,
-    y = PAL_CumulativeNormal(results.paramsValues(i,:),x);
-    plot(x,y,'linewidth',2)
+        
+        %Dray psychometric fit. 
+  
+        set(gca,'ColorOrderIndex',i); %Set the color order index so colors match on plots  
+        
+        %drww data
+        nTrials = OutOfNum(i,:);
+        percentCorrect = NumPos(i,:)./OutOfNum(i,:);
+        lowerCi = percentCorrect - binoinv(.025,OutOfNum(i,:),percentCorrect)./OutOfNum(i,:);
+        upperCi = binoinv(.975,nTrials,percentCorrect)./OutOfNum(i,:) - percentCorrect;
+        xJit = (i-2)/10; %Add a little x offset for visibility of markers. 
+        errorbarHandle=errorbar(StimLevels(i,:)+xJit,percentCorrect,lowerCi,upperCi,'o','markersize',10,'linewidth',2);
+             
+       
     end
+    box(gca,'off');
+    
+    legendItems = findobj(gca,'type','errorbar'); %Choose the error bar plot to make a legend for
+    legend(legendItems,'short','mid','long'); %I think this is right order. 
     
      %Define fuller model
     thresholdsfuller = 'constrained';  %Each condition gets own threshold
@@ -261,14 +287,24 @@ OutOfNum = vertcat(shortOutOfNum, midOutOfNum, longOutOfNum);
     resultsDurDistSpeed(iParticipant).paramsValues       = results.paramsValues;
     
 
-    x = linspace(6,15,100);
-    for i=1:3,
-    y = PAL_CumulativeNormal(results.paramsValues(i,:),x)
-    plot(x,y)
+        x = linspace(6,15,100);
+    
+    for i=1:3,      
+        set(gca,'ColorOrderIndex',i); %Set the color order index so colors match on plots  
+        %Dray psychometric fit. 
+        y = PAL_CumulativeNormal(results.paramsValues(i,:),x);
+        plot(x,y,'linewidth',2)        
+                
     end
 %     
     
 end
 
+%Bayes factor for duration vs. 1T1S (e.g. just speed)
+[results1T1S.BIC]-[resultsDur.BIC]
+
+%Bayes factor for full model with duration distance and speed, vs just
+%speed
+[results1T1S.BIC]-[resultsDurDistSpeed.BIC]
 
 
