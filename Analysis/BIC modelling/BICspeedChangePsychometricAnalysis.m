@@ -244,6 +244,7 @@ UnconstrainedBICs = [results3T3S.BIC];
 
 ModelComparisonBFs = ConstrainedBICs - UnconstrainedBICs; %again, negative here means adding more cues is not the favoured explanation
 
+medianBF = median(ModelComparisonBFs);
 
 boxplot(ModelComparisonBFs)
 set(gca,'fontsize',10)

@@ -7,7 +7,7 @@
 %model1
 %[constrained alpha and constrained beta] - [constrained alpha and
 %unconstrained beta]
-%speed only - speed + distance
+%speed only - speed + duration
 %negative = evidence for speed only, positive = evidence for speed +
 %distance
 model1 =  [-12.5984  -12.8444  -11.6642   -2.1060  -11.7868  -12.4345  -11.8099  -12.4830  -11.2807]';
@@ -15,7 +15,7 @@ model1 =  [-12.5984  -12.8444  -11.6642   -2.1060  -11.7868  -12.4345  -11.8099 
 %model2
 %[constrained alpha and constrained beta] - [unconstrained alpha and
 %constrained beta]
-%speed only - speed + duration
+%speed only - speed + distance
 %negative = evidence for speed only, positive = evidence for speed +
 %duration
 model2 =  [-6.8675   -0.1900  -12.5698   -8.9707  -11.3728  -10.7752  -10.6775  -12.0765  -11.0494]';
@@ -34,7 +34,7 @@ boxplot(allmodels)
 set(gca,'fontsize',8)
 xlabel('Model comparison', 'fontsize',12);
 ylabel('Bayes Factor', 'fontsize',12);
-set(gca, 'XTickLabel',{'Speed only - speed & distance', 'Speed only - speed & duration', 'speed only - all cues'});
+set(gca, 'XTickLabel',{'Speed only - speed & duration', 'Speed only - speed & distance', 'speed only - all cues'});
 
 
  set(gcf, 'PaperUnits', 'inches');

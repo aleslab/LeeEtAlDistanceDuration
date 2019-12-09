@@ -153,7 +153,7 @@ for iParticipant = 1:length(participantCodes)
             plot(StimLevelsFineGrain,ProportionCorrectModel,'-', 'color', lineColour,'linewidth',4);
             plot(speedDiff,ProportionCorrectObserved, markerStyle,'markersize',10);
             set(gca, 'fontsize',12);
-            set(gca, 'Xtick', speedDiff);
+            set(gca, 'Xtick', [6.70 7.66 8.75 10 11.43 13.06 14.92]);
             axis([6 16 0 1]);
             xlabel(xLabelTitle);
             ylabel('Proportion "it got faster" responses');
