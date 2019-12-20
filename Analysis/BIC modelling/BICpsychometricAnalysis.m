@@ -174,7 +174,7 @@ OutOfNum = vertcat(shortOutOfNum, midOutOfNum, longOutOfNum);
     results3T3S(iParticipant).BIC       = log(n)*results.numParams - 2*results.LL;
     
     
-    %Define fuller model
+    %Define fuller model %cuff
     thresholdsfuller = 'constrained';  %Each condition gets own threshold
     slopesfuller = 'unconstrained';      %Each condition gets own slope
     guessratesfuller = 'fixed';          %Guess rate fixed
@@ -227,25 +227,25 @@ OutOfNum = vertcat(shortOutOfNum, midOutOfNum, longOutOfNum);
     %Add a bit of x offset to make things visible
    
     x = linspace(6,15,100);
-    figure;hold on;
-          y = PAL_CumulativeNormal(results.paramsValues(i,:),x);
-        plot(x,y,'k--','linewidth',2)
-    for i=1:3,
-        
-        %Dray psychometric fit. 
-  
-        set(gca,'ColorOrderIndex',i); %Set the color order index so colors match on plots  
-        
-        %drww data
-        nTrials = OutOfNum(i,:);
-        percentCorrect = NumPos(i,:)./OutOfNum(i,:);
-        lowerCi = percentCorrect - binoinv(.025,OutOfNum(i,:),percentCorrect)./OutOfNum(i,:);
-        upperCi = binoinv(.975,nTrials,percentCorrect)./OutOfNum(i,:) - percentCorrect;
-        xJit = (i-2)/10; %Add a little x offset for visibility of markers. 
-        errorbarHandle=errorbar(StimLevels(i,:)+xJit,percentCorrect,lowerCi,upperCi,'o','markersize',10,'linewidth',2);
-             
-       
-    end
+%     figure;hold on;
+%           y = PAL_CumulativeNormal(results.paramsValues(i,:),x);
+%         plot(x,y,'k--','linewidth',2)
+%     for i=1:3,
+%         
+%         %Dray psychometric fit. 
+%   
+%         set(gca,'ColorOrderIndex',i); %Set the color order index so colors match on plots  
+%         
+%         %drww data
+%         nTrials = OutOfNum(i,:);
+%         percentCorrect = NumPos(i,:)./OutOfNum(i,:);
+%         lowerCi = percentCorrect - binoinv(.025,OutOfNum(i,:),percentCorrect)./OutOfNum(i,:);
+%         upperCi = binoinv(.975,nTrials,percentCorrect)./OutOfNum(i,:) - percentCorrect;
+%         xJit = (i-2)/10; %Add a little x offset for visibility of markers. 
+%         errorbarHandle=errorbar(StimLevels(i,:)+xJit,percentCorrect,lowerCi,upperCi,'o','markersize',10,'linewidth',2);
+%              
+%        
+%     end
     box(gca,'off');
     
     legendItems = findobj(gca,'type','errorbar'); %Choose the error bar plot to make a legend for
@@ -289,22 +289,61 @@ OutOfNum = vertcat(shortOutOfNum, midOutOfNum, longOutOfNum);
 
         x = linspace(6,15,100);
     
-    for i=1:3,      
-        set(gca,'ColorOrderIndex',i); %Set the color order index so colors match on plots  
-        %Dray psychometric fit. 
-        y = PAL_CumulativeNormal(results.paramsValues(i,:),x);
-        plot(x,y,'linewidth',2)        
-                
-    end
+%     for i=1:3,      
+%         set(gca,'ColorOrderIndex',i); %Set the color order index so colors match on plots  
+%         %Dray psychometric fit. 
+%         y = PAL_CumulativeNormal(results.paramsValues(i,:),x);
+%         plot(x,y,'linewidth',2)        
+%                 
+%     end
 %     
     
+         %Define fuller model
+    thresholdsfuller = 'unconstrained';  %Each condition gets own threshold
+    slopesfuller = 'unconstrained';      %Each condition gets own slope
+    guessratesfuller = 'unconstrained';          %Guess rate fixed
+    lapseratesfuller= 'unconstrained';
+    [results.paramsValues, results.LL, results.exitflag, results.output funcParams results.numParams] = ...
+        PAL_PFML_FitMultiple(StimLevels, NumPos, OutOfNum, ...
+        paramsValues, PF,'searchOptions',options,'lapserates',lapseratesfuller,'guessLimits',[0 1], 'thresholds',thresholdsfuller,...
+        'slopes',slopesfuller,'guessrates',guessratesfuller,'lapseLimits',[0 1],'lapseFit',lapseFit,'gammaeqlambda',false,'searchOptions',options);
+    
+    
+    resultsAllUncon(iParticipant).LL = results.LL;
+    resultsAllUncon(iParticipant).numParams = results.numParams;
+    n  =  sum(OutOfNum(:));
+    resultsAllUncon(iParticipant).n = n;
+    resultsAllUncon(iParticipant).BIC       = log(n)*results.numParams - 2*results.LL;
+    resultsAllUncon(iParticipant).paramsValues       = results.paramsValues;
+    
+ %Define fuller model
+    thresholdsfuller = 'constrained';  %Each condition gets own threshold
+    slopesfuller = 'unconstrained';      %Each condition gets own slope
+    guessratesfuller = 'unconstrained';          %Guess rate fixed
+    lapseratesfuller= 'unconstrained';
+    [results.paramsValues, results.LL, results.exitflag, results.output funcParams results.numParams] = ...
+        PAL_PFML_FitMultiple(StimLevels, NumPos, OutOfNum, ...
+        paramsValues, PF,'searchOptions',options,'lapserates',lapseratesfuller,'guessLimits',[0 1], 'thresholds',thresholdsfuller,...
+        'slopes',slopesfuller,'guessrates',guessratesfuller,'lapseLimits',[0 1],'lapseFit',lapseFit,'gammaeqlambda',false,'searchOptions',options);
+    
+    
+    resultscuuu(iParticipant).LL = results.LL;
+    resultscuuu(iParticipant).numParams = results.numParams;
+    n  =  sum(OutOfNum(:));
+    resultscuuu(iParticipant).n = n;
+    resultscuuu(iParticipant).BIC       = log(n)*results.numParams - 2*results.LL;
+    resultscuuu(iParticipant).paramsValues       = results.paramsValues;
+    
+
+
+
 end
 
 %Bayes factor for duration vs. 1T1S (e.g. just speed)
-[results1T1S.BIC]-[resultsDur.BIC]
+%[results1T1S.BIC]-[resultsDur.BIC]
 
 %Bayes factor for full model with duration distance and speed, vs just
 %speed
-[results1T1S.BIC]-[resultsDurDistSpeed.BIC]
+%[results1T1S.BIC]-[resultsDurDistSpeed.BIC]
 
 

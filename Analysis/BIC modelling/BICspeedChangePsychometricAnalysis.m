@@ -234,27 +234,53 @@ for iParticipant = 1:length(participantCodes)
         results1T1S(iParticipant).n = n;
         results1T1S(iParticipant).BIC       = log(n)*results.numParams - 2*results.LL;
         
+             thresholdsfuller = 'unconstrained';
+        slopesfuller = 'unconstrained';
+        guessratesfuller = 'unconstrained';
+       lapseratesfuller= 'unconstrained';
+        
+        [results.paramsValues, results.LL, results.exitflag, results.output funcParams results.numParams] = ...
+            PAL_PFML_FitMultiple(StimLevels, NumPos, OutOfNum, ...
+            paramsValues, PF,'searchOptions',options,'lapserates',lapseratesfuller,'guessLimits',[0 1],'thresholds',thresholdsfuller,...
+            'slopes',slopesfuller,'guessrates',guessratesfuller,'lapseLimits',[0 1],'lapseFit',lapseFit,'gammaeqlambda',false,'searchOptions',options);
+        
+        
+        resultsuuuu(iParticipant).LL = results.LL;
+        resultsuuuu(iParticipant).numParams = results.numParams;
+        n  =  sum(BSOutOfNum(:));
+        resultsuuuu(iParticipant).n = n;
+        resultsuuuu(iParticipant).BIC       = log(n)*results.numParams - 2*results.LL;
+          
+        
+        
 end
 
 
 %% model comparisons
 
 ConstrainedBICs = [results1T1S.BIC];
-UnconstrainedBICs = [results3T3S.BIC];
+UUFFBICs = [results3T3S.BIC];
+UUUUBICs = [resultsuuuu.BIC];
 
-ModelComparisonBFs = ConstrainedBICs - UnconstrainedBICs; %again, negative here means adding more cues is not the favoured explanation
+UUFFModelComparisonBFs = ConstrainedBICs - UUFFBICs; %again, negative here means adding more cues is not the favoured explanation
 
-medianBF = median(ModelComparisonBFs);
+UUUUModelComparisonBFs = ConstrainedBICs - UUUUBICs;
 
-boxplot(ModelComparisonBFs)
+UUFFmedianBF = median(UUFFModelComparisonBFs);
+
+UUUUmedianBF = median(UUUUModelComparisonBFs);
+
+bothModels = [UUFFModelComparisonBFs' UUUUModelComparisonBFs'];
+
+boxplot(bothModels)
 set(gca,'fontsize',10)
-xlabel('Model comparison', 'fontsize',12);
+xlabel('Comparison with speed only model', 'fontsize',12);
 ylabel('Bayes Factor', 'fontsize',12);
-set(gca, 'XTickLabel',{'Speed Only - Additional Cue'});
+set(gca, 'XTickLabel',{'uuff', 'uuuu'});
 
 
  set(gcf, 'PaperUnits', 'inches');
  x_width=6;
  y_width=5;
  set(gcf, 'PaperPosition', [0 0 x_width y_width]); %
- saveas(gcf,'modelBoxPlot.pdf');
+ saveas(gcf,'newerModelBoxPlot.pdf');
